@@ -1,0 +1,146 @@
+openapi: 3.0.0
+info:
+  title: WMO Subsidy API
+  version: 1.0.0
+  description: API for managing WMO Subsidy 
+
+paths:
+  /users:
+    post:
+      summary: Create a new user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/User"
+      responses:
+        "201":
+          description: User created successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+
+  /users/{userId}/applications:
+    post:
+      summary: Submit a new application for WMO subsidy
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Application"
+      responses:
+        "201":
+          description: Application submitted successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Application"
+
+  /users/{userId}/applications/{applicationId}:
+    get:
+      summary: Get a application for WMO subsidy
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: applicationId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: User budget details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Budget"
+
+  /applications/{applicationId}/decision:
+    post:
+      summary: Approve or reject a WMO subsidy application
+      parameters:
+        - name: applicationId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Decision"
+      responses:
+        "200":
+          description: Decision submitted successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Decision"
+
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+          example: "117"
+        name:
+          type: string
+          example: "Kelvin V."
+
+    Application:
+      type: object
+      properties:
+        id:
+          type: string
+          example: "3018"
+        userId:
+          type: string
+          example: "117"
+        status:
+          type: string
+          example: "pending"
+
+    Decision:
+      type: object
+      properties:
+        applicationId:
+          type: string
+          example: "2017"
+        approved:
+          type: boolean
+          example: true
+        reason:
+          type: string
+          example: "Application approved"
+
+    Budget:
+      type: object
+      properties:
+        userId:
+          type: string
+          example: "121"
+        totalKilometers:
+          type: integer
+          example: 400
+        remainingKilometers:
+          type: integer
+          example: 800
+        validUntil:
+          type: string
+          format: date
+          example: "09-10-2024"
